@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.function.BiFunction;
+
 public abstract class FileUtils {
 
     public static void streamFile(String filepath, StreamObserver requestObserver, BiFunction<String, ByteString, ?> requestProvider) {
@@ -29,7 +30,7 @@ public abstract class FileUtils {
     }
 
     private static String getSimpleFilename(String filepath) {
-        if(filepath.indexOf('/') != -1) {
+        if (filepath.indexOf('/') != -1) {
             return filepath.substring(filepath.lastIndexOf("/") + 1);
         }
         return filepath;

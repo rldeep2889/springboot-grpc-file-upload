@@ -55,7 +55,14 @@ public class FileServiceClient {
                                         setAttachmentBytes(byteString)
                                         .setAttachmentName(filename)
                                         .build()
-                        ).build()
+                        )
+                        .setAttachments(2,
+                                Attachment.newBuilder().
+                                        setAttachmentBytes(byteString)
+                                        .setAttachmentName(filename)
+                                        .build()
+                        )
+                        .build()
                 );
 
             }
