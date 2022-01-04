@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package messages;
+import "google/protobuf/struct.proto";
+import "google/api/annotations.proto";
+
+option java_package="com.grpc.file.upload.proto.ncclient";
+option java_multiple_files=true;
+
+service FileUploadService{
+
+  rpc PublishMessage(PublishMessageRequest) returns(MessageResponse) {
+    option (google.api.http) = {
+      post: "/v1/sendMessage"
+      body: "*"
+    };
+  };
+}
+
+message Attachment{
+  // name of the attachment
+  string attachment_name = 1;
+  // attachment file
+  bytes attachment_bytes = 2;
+}
+
+message PublishMessageRequest{
+
+  uint32 source_id = 1;
+
+  string auth_token = 2;
+
+  string message = 3;
+
+  bool sync_message = 4;
+
+  repeated Attachment attachments = 5;
+
+  string tenant_id = 6;
+}
+
+message MessageResponse{
+   //status is SUCCESS/ERROR
+  MetaStatus meta_status = 1;
+  //success or error message
+  string meta_message = 2;
+  // message details
+  string data = 3;
+  // unique number generated for every message
+  string message_id = 4;
+}
+
+enum MetaStatus{
+  SUCCESS = 0;
+  ERROR = 1;
+}
