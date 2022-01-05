@@ -1,20 +1,21 @@
 syntax = "proto3";
 
 package messages;
-import "google/protobuf/struct.proto";
-import "google/api/annotations.proto";
+//import "google/protobuf/struct.proto";
+//import "google/api/annotations.proto";
 
 option java_package="com.grpc.file.upload.proto.ncclient";
 option java_multiple_files=true;
 
 service FileUploadService{
 
-  rpc PublishMessage(stream PublishMessageRequest) returns(MessageResponse) {
-    option (google.api.http) = {
-      post: "/v1/sendMessage"
-      body: "*"
-    };
-  };
+  rpc PublishMessage(stream PublishMessageRequest) returns(MessageResponse);
+//  rpc PublishMessage(stream PublishMessageRequest) returns(MessageResponse) {
+//    option (google.api.http) = {
+//      post: "/v1/sendMessage"
+//      body: "*"
+//    };
+//  };
 }
 
 message Attachment{
@@ -33,6 +34,7 @@ message PublishMessageRequest{
   string message = 3;
 
 //  bool sync_message = 4;
+
 
   repeated Attachment attachments = 5;
 
