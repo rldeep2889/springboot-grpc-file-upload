@@ -18,7 +18,8 @@ public abstract class FileUtils {
         try {
             final File file = Paths.get(filepath).toFile();
             BufferedInputStream bInputStream = new BufferedInputStream(new FileInputStream(file));
-            int bufferSize = 1024 * 1024;
+            int bufferSize = 1024 * 1024  ;
+            //int bufferSize = 1396101 ;
             byte[] buffer = new byte[bufferSize];
             int size;
             while ((size = bInputStream.read(buffer)) > 0) {

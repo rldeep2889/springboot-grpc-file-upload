@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class FileServiceClient {
 
     public static void main(final String[] args) throws InterruptedException {
-        if(args == null || args.length == 0) {
+        if (args == null || args.length == 0) {
             throw new IllegalArgumentException("provide (at least 1) filepath as argument");
         }
 
@@ -61,7 +61,12 @@ public class FileServiceClient {
                         .addAttachments(
                                 Attachment.newBuilder().
                                         setAttachmentBytes(byteString)
-                                        .setAttachmentName(filename)
+                                        .setAttachmentName("copy_" + filename)
+                                        .build())
+                        .addAttachments(
+                                Attachment.newBuilder().
+                                        setAttachmentBytes(byteString)
+                                        .setAttachmentName("3rd_copy_" + filename)
                                         .build()
                         )
                         .build()

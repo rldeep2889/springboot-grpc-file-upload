@@ -73,11 +73,13 @@ public class FileServiceImpl extends FileUploadServiceGrpc.FileUploadServiceImpl
             public void onCompleted() {
                 responseObserver.onNext(MessageResponse.newBuilder().setMessageId("dummy1").setMetaMessage("Completed !!").setData("You are now done with streaming").setMetaStatus(MetaStatus.SUCCESS).build());
                 responseObserver.onCompleted();
+                log.info("Received attachment Fully ");
                 if (!outputStreams.isEmpty()) {
                     try {
                         for (BufferedOutputStream outputStream : outputStreams.values()) {
                             try {
                                 outputStream.close();
+                                log.info("Closing outputStream ");
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
