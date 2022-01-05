@@ -40,6 +40,8 @@ public class FileServiceImpl extends FileUploadServiceGrpc.FileUploadServiceImpl
                 {
                     List<Attachment> attachments = request.getAttachmentsList();
 
+                    log.info("Number of attachments received :: {}", request.getAttachmentsCount());
+
                     for (Attachment att : attachments) {
                         byte[] data = att.getAttachmentBytes().toByteArray();
                         String name = att.getAttachmentName();
@@ -54,6 +56,7 @@ public class FileServiceImpl extends FileUploadServiceGrpc.FileUploadServiceImpl
                             outputStreams.get(name).write(data);
                             outputStreams.get(name).flush();
                         } catch (Exception e) {
+                            log.error("EXCEPTION !!", e);
                             e.printStackTrace();
                         }
                     }

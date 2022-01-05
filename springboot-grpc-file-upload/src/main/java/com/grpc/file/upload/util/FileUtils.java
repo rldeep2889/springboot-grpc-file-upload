@@ -2,6 +2,7 @@ package com.grpc.file.upload.util;
 
 import com.google.protobuf.ByteString;
 import io.grpc.stub.StreamObserver;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.function.BiFunction;
 
+@Slf4j
 public abstract class FileUtils {
 
     public static void streamFile(String filepath, StreamObserver requestObserver, BiFunction<String, ByteString, ?> requestProvider) {
@@ -31,7 +33,10 @@ public abstract class FileUtils {
 
     private static String getSimpleFilename(String filepath) {
         if (filepath.indexOf('/') != -1) {
-            return filepath.substring(filepath.lastIndexOf("/") + 1);
+            String substring = filepath.substring(filepath.lastIndexOf("/") + 1);
+
+            log.info("Substring value :: {}", substring);
+            return substring;
         }
         return filepath;
     }

@@ -8,10 +8,12 @@ import com.grpc.file.upload.util.GrpcUtils;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public class FileServiceClient {
 
     public static void main(final String[] args) throws InterruptedException {
@@ -19,7 +21,7 @@ public class FileServiceClient {
             throw new IllegalArgumentException("provide (at least 1) filepath as argument");
         }
 
-        final ManagedChannel managedChannel = ManagedChannelBuilder.forAddress("localhost", 6065).usePlaintext().build();
+        final ManagedChannel managedChannel = ManagedChannelBuilder.forAddress("localhost", 9090).usePlaintext().build();
         final FileUploadServiceGrpc.FileUploadServiceStub stub = FileUploadServiceGrpc.newStub(managedChannel);
 
         Map<String, Object> metaData = new HashMap<>();
@@ -32,7 +34,7 @@ public class FileServiceClient {
                 new ArrayList<>(Arrays.asList(args))
         );
 
-        managedChannel.awaitTermination(5, TimeUnit.SECONDS);
+        managedChannel.awaitTermination(50, TimeUnit.SECONDS);
     }
 
     public static void uploadFile(final FileUploadServiceGrpc.FileUploadServiceStub stub, final Map<String, Object> metaData, final List<String> filepaths) {
@@ -50,13 +52,13 @@ public class FileServiceClient {
                 final String filepath = filepaths.remove(0);
 
                 FileUtils.streamFile(filepath, requestObserver, (filename, byteString) -> PublishMessageRequest.newBuilder()
-                        .setAttachments(1,
+                        .addAttachments(
                                 Attachment.newBuilder().
                                         setAttachmentBytes(byteString)
                                         .setAttachmentName(filename)
                                         .build()
                         )
-                        .setAttachments(2,
+                        .addAttachments(
                                 Attachment.newBuilder().
                                         setAttachmentBytes(byteString)
                                         .setAttachmentName(filename)
@@ -68,6 +70,7 @@ public class FileServiceClient {
             }
         } catch (RuntimeException e) {
             requestObserver.onError(e);
+            log.error("EXCEPTION !!", e);
             throw e;
         }
         requestObserver.onCompleted();
