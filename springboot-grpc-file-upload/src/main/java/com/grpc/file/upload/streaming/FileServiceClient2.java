@@ -14,10 +14,10 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Client to publish meta data and attachments separately. Meta data will be published only once
+ * Client to publish meta data and attachments together
  */
 @Slf4j
-public class FileServiceClient {
+public class FileServiceClient2 {
 
     public static void main(final String[] args) throws InterruptedException {
         if (args == null || args.length == 0) {
@@ -44,17 +44,19 @@ public class FileServiceClient {
         StreamObserver<PublishMessageRequest> requestObserver = stub.publishMessage(GrpcUtils.getDefaultStreamObserver());
 
         try {
-            PublishMessageRequest formPart = PublishMessageRequest.newBuilder()
-                    .setSourceId(Integer.parseInt(metaData.getOrDefault("source_id", 0).toString()))
-                    .setMessage(metaData.getOrDefault("message", "_no_message").toString())
-                    .build();
-
-            requestObserver.onNext(formPart);
+//            PublishMessageRequest formPart = PublishMessageRequest.newBuilder()
+//                    .setSourceId(Integer.parseInt(metaData.getOrDefault("source_id", 0).toString()))
+//                    .setMessage(metaData.getOrDefault("message", "_no_message").toString())
+//                    .build();
+//
+//            requestObserver.onNext(formPart);
 
             while (!filepaths.isEmpty()) {
                 final String filepath = filepaths.remove(0);
 
                 FileUtils.streamFile(filepath, requestObserver, (filename, byteString) -> PublishMessageRequest.newBuilder()
+                        .setSourceId(Integer.parseInt(metaData.getOrDefault("source_id", 0).toString()))
+                        .setMessage(metaData.getOrDefault("message", "_no_message").toString())
                         .addAttachments(
                                 Attachment.newBuilder().
                                         setAttachmentBytes(byteString)
