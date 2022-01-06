@@ -32,36 +32,33 @@ public class FileServiceImpl extends FileUploadServiceGrpc.FileUploadServiceImpl
 
             @Override
             public void onNext(PublishMessageRequest request) {
-//                if (request.hasForm()) {
-//                    final Form form = request.getgetForm();
-//                    log.info("\nprocessing data: [" + form.getId() + "," + form.getValue() + "," + form.getMessage() + "]\n");
-//                } else {
 
-                {
-                    List<Attachment> attachments = request.getAttachmentsList();
+                log.info("\nprocessing data: ["  +"," + request.getSourceId() + "," + request.getMessage() + "]\n");
 
-                    log.info("Number of attachments received :: {}", request.getAttachmentsCount());
+                List<Attachment> attachments = request.getAttachmentsList();
 
-                    for (Attachment att : attachments) {
-                        byte[] data = att.getAttachmentBytes().toByteArray();
-                        String name = att.getAttachmentName();
+                log.info("Number of attachments received :: {}", request.getAttachmentsCount());
 
-                        try {
-                            if (!outputStreams.containsKey(name)) {
-                                outputStreams.put(name, new BufferedOutputStream(new FileOutputStream(workingDirectory + '/' + name)));
-                            }
+                for (Attachment att : attachments) {
+                    byte[] data = att.getAttachmentBytes().toByteArray();
+                    String name = att.getAttachmentName();
 
-                            log.info("CURRENT THREAD: " + Thread.currentThread().getId() + " => " + outputStreams.get(name).toString() + ":" + name);
-
-                            outputStreams.get(name).write(data);
-                            outputStreams.get(name).flush();
-                        } catch (Exception e) {
-                            log.error("EXCEPTION !!", e);
-                            e.printStackTrace();
+                    try {
+                        if (!outputStreams.containsKey(name)) {
+                            outputStreams.put(name, new BufferedOutputStream(new FileOutputStream(workingDirectory + '/' + name)));
                         }
-                    }
 
+                        log.info("CURRENT THREAD: " + Thread.currentThread().getId() + " => " + outputStreams.get(name).toString() + ":" + name);
+
+                        outputStreams.get(name).write(data);
+                        outputStreams.get(name).flush();
+                    } catch (Exception e) {
+                        log.error("EXCEPTION !!", e);
+                        e.printStackTrace();
+                    }
                 }
+
+
             }
 
             @Override
